@@ -1,0 +1,34 @@
+{
+  "name": "sf-mcp-server",
+  "private": true,
+  "version": "0.0.3",
+  "description": "Salesforce MCP 服务端，供 Cursor 等客户端连接。",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "sf-mcp-server": "./index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "start:dist": "node dist/mcp.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "jsforce": "^3.10.14"
+  },
+  "files": [
+    "index.js",
+    "config.js",
+    "core",
+    "tools",
+    "TOOLS.md"
+  ],
+  "keywords": [
+    "mcp",
+    "salesforce",
+    "model-context-protocol"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+	"recommendations": [
+		// 安装 Salesforce 官方扩展包
+		"salesforce.salesforcedx-vscode"
+	]
+}

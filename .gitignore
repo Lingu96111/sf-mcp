@@ -1,0 +1,4 @@
+node_modules
+*.vsix
+.env
+# server/dist/mcp.js 勿加入 ignore，否则新版 vsce 打包时可能打不进 VSIX

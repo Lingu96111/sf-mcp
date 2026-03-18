@@ -1,0 +1,74 @@
+{
+  "name": "sf-mcp",
+  "displayName": "SF MCP",
+  "description": "在 cursor 中为 AI 提供 Salesforce 的 MCP 连接工具。",
+  "version": "0.0.1",
+  "publisher": "sfMCP",
+  "icon": "./images/icon.png",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lingu96111/sf-mcp"
+  },
+  "engines": {
+    "vscode": "^1.85.0",
+    "node": ">=18"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "salesforceMcp.startServer",
+        "title": "Salesforce MCP: 启动服务"
+      }
+    ],
+    "configuration": {
+      "title": "Salesforce MCP",
+      "properties": {
+        "salesforceMcp.sfAuthMode": {
+          "type": "string",
+          "enum": ["cli", "token"],
+          "default": "cli",
+          "description": "Salesforce 认证模式。"
+        },
+        "salesforceMcp.sfOrgAlias": {
+          "type": "string",
+          "default": "",
+          "description": "Org 的本地别名。"
+        },
+        "salesforceMcp.sfCliPath": {
+          "type": "string",
+          "default": "",
+          "description": "Salesforce CLI 安装路径。"
+        },
+        "salesforceMcp.sfInstanceUrl": {
+          "type": "string",
+          "default": "",
+          "description": "Salesforce Instance URL。"
+        },
+        "salesforceMcp.sfAccessToken": {
+          "type": "string",
+          "default": "",
+          "description": "Salesforce Access Token。"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build:server": "esbuild server/index.js --bundle --platform=node --target=node18 --format=cjs --outfile=server/dist/mcp.js --legal-comments=none",
+    "vscode:prepublish": "pnpm install && pnpm install --dir server --prod && pnpm run build:server",
+    "package": "vsce package",
+    "install:mcp": "pnpm install --dir server && pnpm run build:server",
+    "dev:prep": "pnpm run build:server"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "@vscode/vsce": "^3.2.0"
+  }
+}
