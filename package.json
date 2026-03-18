@@ -1,6 +1,6 @@
 {
-  "name": "sf-mcp",
-  "displayName": "SF MCP",
+  "name": "MCP-Salesforce",
+  "displayName": "MCP-Salesforce",
   "description": "在 cursor 中为 AI 提供 Salesforce 的 MCP 连接工具。",
   "version": "0.0.1",
   "publisher": "sfMCP",
