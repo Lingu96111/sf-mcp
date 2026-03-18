@@ -33,7 +33,7 @@ export function limitValue(value, maxVal, minVal = DEFAULT_LIMIT_MIN) {
   return Math.max(safeMin, Math.min(value, safeMax));
 }
 
-// 校验路径参数，拒绝包含 .. / \ 的输入，防止路径遍历
+// 校验路径参数
 export function validatePathParam(value, paramName = "pathParam") {
   const str = String(value);
   if (str.includes("..") || str.includes("/") || str.includes("\\")) {
@@ -98,7 +98,7 @@ function authViaToken() {
   return { instanceUrl: instUrl, accessToken };
 }
 
-// 规范化 instanceUrl：去除尾部斜杠，拒绝 lightning URL（REST API 需用 instance URL）
+// 拒绝 lightning URL
 function normalizeInstanceUrl(url) {
   const trimmed = String(url).trim().replace(/\/+$/, "");
   if (!trimmed) {
@@ -143,13 +143,13 @@ export function getSfConn() {
   return sfConn;
 }
 
-// 重建连接并返回（会话失效时用）
+// 重建连接并返回
 export function refreshSfConn() {
   sfConn = buildConnection();
   return sfConn;
 }
 
-// 执行操作，若会话失效则重连并重试一次
+// 会话失效则重连并重试一次
 export async function withReauth(opFn) {
   let conn = getSfConn();
   try {
@@ -184,7 +184,7 @@ export async function sfToolingQuery(soql) {
   );
 }
 
-// 对 REST API 发起 GET 请求（path 需以 / 开头，否则无法拼接为绝对 URL）
+// 对 REST API 发起 GET 请求
 export async function sfRestGet(path) {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   return withReauth((conn) =>
