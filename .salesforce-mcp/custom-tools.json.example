@@ -1,0 +1,55 @@
+// 自定义 MCP 工具配置示例
+// 将此文件复制为 custom-tools.json 并按需修改
+// 支持 JSONC：可使用 // 行注释、/* 块注释 */ 和尾随逗号
+//
+// 工具名称必须以 custom_ 或 user_ 开头
+// 支持类型：soql、tooling_query、rest
+// 参数类型：string、number、boolean
+// 模板占位符：{{paramName}}
+[
+  {
+    "name": "custom_get_accounts_by_industry",
+    "description": "按行业查询 Account 列表（只读）",
+    "type": "soql",
+    "template": "SELECT Id, Name, Industry, CreatedDate FROM Account WHERE Industry = '{{industry}}' ORDER BY CreatedDate DESC LIMIT {{limit}}",
+    "parameters": [
+      { "name": "industry", "type": "string", "required": true, "description": "行业名称" },
+      { "name": "limit", "type": "number", "required": false, "default": 50, "description": "返回条数上限" }
+    ]
+  },
+  {
+    // tooling_query 示例：查询特定前缀的 ApexClass
+    "name": "custom_find_apex_by_prefix",
+    "description": "通过名称前缀查找 Apex 类（只读）",
+    "type": "tooling_query",
+    "template": "SELECT Id, Name, ApiVersion, LastModifiedDate FROM ApexClass WHERE Name LIKE '{{prefix}}%' ORDER BY Name LIMIT {{limit}}",
+    "parameters": [
+      { "name": "prefix", "type": "string", "required": true, "description": "类名前缀" },
+      { "name": "limit", "type": "number", "required": false, "default": 100 }
+    ]
+  },
+  {
+    // REST GET 示例：获取指定对象的 describe
+    "name": "custom_describe_object",
+    "description": "获取指定 Salesforce 对象的元数据描述",
+    "type": "rest",
+    "method": "GET",
+    "template": "/sobjects/{{objectName}}/describe",
+    "parameters": [
+      { "name": "objectName", "type": "string", "required": true, "description": "对象 API 名称" }
+    ]
+  },
+  {
+    // REST POST 示例：创建 Case 记录
+    "name": "custom_create_case",
+    "description": "通过 REST API 创建一条 Case 记录",
+    "type": "rest",
+    "method": "POST",
+    "template": "/sobjects/Case",
+    "body": "{\"Subject\": \"{{subject}}\", \"Origin\": \"Web\", \"Priority\": \"{{priority}}\"}",
+    "parameters": [
+      { "name": "subject", "type": "string", "required": true, "description": "Case 主题" },
+      { "name": "priority", "type": "string", "required": false, "default": "Medium", "description": "优先级" }
+    ]
+  }
+]

@@ -71,9 +71,9 @@ function showConfigUpdated(message) {
   vscode.window.showInformationMessage(message);
 }
 
-// MCP 由 esbuild 打入 server/dist/mcp.js
+// MCP 由 esbuild 打入 server/dist/mcp.cjs（CJS 格式，不受 server/package.json "type":"module" 影响）
 function getBundledMcpPathStr(context) {
-  return path.join(context.extensionPath, "server", "dist", "mcp.js");
+  return path.join(context.extensionPath, "server", "dist", "mcp.cjs");
 }
 
 // 判断即将写入的 salesforce-mcp 条与现有是否一致

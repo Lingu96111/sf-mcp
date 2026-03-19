@@ -13,7 +13,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "start:dist": "node dist/mcp.js"
+    "start:dist": "node dist/mcp.cjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",

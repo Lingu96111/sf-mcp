@@ -192,6 +192,17 @@ export async function sfRestGet(path) {
   );
 }
 
+// 对 REST API 发起通用请求（支持 GET/POST/PUT/PATCH/DELETE）
+export async function sfRestRequest(path, method = "GET", body = null) {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const reqOpts = { method: method.toUpperCase(), url: normalizedPath };
+  if (body !== null && body !== undefined) {
+    reqOpts.body = typeof body === "string" ? JSON.parse(body) : body;
+    reqOpts.headers = { "Content-Type": "application/json" };
+  }
+  return withReauth((conn) => conn.request(reqOpts));
+}
+
 // 获取对象 describe
 export async function sfDescribeObject(objName) {
   return withReauth((conn) => conn.sobject(objName).describe());

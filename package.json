@@ -2,7 +2,7 @@
   "name": "MCP-Salesforce",
   "displayName": "MCP-Salesforce",
   "description": "在 cursor 中为 AI 提供 Salesforce 的 MCP 连接工具。",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "publisher": "sfMCP",
   "icon": "./images/icon.png",
   "license": "MIT",
@@ -61,7 +61,7 @@
     }
   },
   "scripts": {
-    "build:server": "esbuild server/index.js --bundle --platform=node --target=node18 --format=cjs --outfile=server/dist/mcp.js --legal-comments=none",
+    "build:server": "esbuild server/index.js --bundle --platform=node --target=node18 --format=cjs --outfile=server/dist/mcp.cjs --legal-comments=none",
     "vscode:prepublish": "pnpm install && pnpm install --dir server --prod && pnpm run build:server",
     "package": "vsce package",
     "install:mcp": "pnpm install --dir server && pnpm run build:server",
