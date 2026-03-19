@@ -1,11 +1,22 @@
 {
   "name": "MCP-Salesforce",
-  "displayName": "MCP-Salesforce",
-  "description": "在 cursor 中为 AI 提供 Salesforce 的 MCP 连接工具。",
+  "displayName": "Salesforce MCP for Cursor",
+  "description": "MCP tools for Salesforce development in Cursor. Query SOQL, run Apex, manage metadata, and more with AI assistance.",
   "version": "0.1.1",
   "publisher": "sfMCP",
   "icon": "./images/icon.png",
   "license": "MIT",
+  "keywords": [
+    "salesforce",
+    "mcp",
+    "cursor",
+    "ai",
+    "soql",
+    "apex",
+    "model-context-protocol",
+    "salesforce-api",
+    "crm"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/lingu96111/sf-mcp"
@@ -15,6 +26,7 @@
     "node": ">=18"
   },
   "categories": [
+    "Programming Languages",
     "Other"
   ],
   "activationEvents": [
