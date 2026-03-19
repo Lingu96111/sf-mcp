@@ -2,7 +2,7 @@
   "name": "MCP-Salesforce",
   "displayName": "MCP-Salesforce",
   "description": "在 cursor 中为 AI 提供 Salesforce 的 MCP 连接工具。",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "sfMCP",
   "icon": "./images/icon.png",
   "license": "MIT",
