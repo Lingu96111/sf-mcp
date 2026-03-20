@@ -2,7 +2,7 @@
   "name": "MCP-Salesforce",
   "displayName": "Salesforce MCP for Cursor",
   "description": "MCP tools for Salesforce development in Cursor. Query SOQL, run Apex, manage metadata, and more with AI assistance.",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "publisher": "sfMCP",
   "icon": "./images/icon.png",
   "license": "MIT",

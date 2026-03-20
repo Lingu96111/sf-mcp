@@ -44,7 +44,7 @@
 | `get_apex_log_body` | 根据日志 Id 获取 Apex 调试日志的完整内容（只读）。 | `logId: str` |
 | `get_apex_source` | 查询指定 Apex 类在 Org 中的源代码和最后修改时间（只读）。 | `className: str` |
 | `get_triggers_for_object` | 查询指定对象上的 Apex Trigger 列表：名称、对象、状态、事件、最后修改时间（只读）。 | `objName: str` |
-| `get_flows_for_object` | 查询与指定对象相关的 Record-Triggered Flow（只读）。 | `objName: str` |
+| `get_flows_for_object` | 查询与指定对象相关的 Record-Triggered Flow（只读）。 | `objName: str`, `onlyActive: bool = false`, `limit: Optional[int]`（最大 200） |
 | `get_workflows_for_object` | 查询指定对象上的 Workflow Rule 列表（只读）。 | `objName: str` |
 | `list_apex_classes` | 查询 ApexClass 列表（只读）。支持名称模糊匹配与条数限制。 | `nameLike: Optional[str]`, `limit: int = 100` |
 | `list_apex_triggers` | 查询 ApexTrigger 列表（只读）。支持名称模糊匹配与条数限制。 | `nameLike: Optional[str]`, `limit: int = 100` |
@@ -52,7 +52,29 @@
 
 ---
 
-## 4. 用户与权限（tools_user_security）
+## 4. Flow 定义与版本（tools_flow）
+
+| 工具名 | 说明 | 参数 |
+|--------|------|------|
+| `get_flow_by_developer_name` | 按 DeveloperName 查 FlowDefinition（Active/Latest 版本 Id 等），只读。 | `flowDeveloperName: str` |
+| `list_flows` | 列出 FlowDefinition；可按标签或 API 名模糊匹配，只读。 | `nameLike: Optional[str]`, `limit: int = 100`（最大 200） |
+| `get_flow_versions` | 列出某 Flow 的所有 FlowVersion（无 VersionData）。`flowDefinitionId` / `flowDeveloperName` / `flowId` **三选一**。 | 见上（三选一） |
+| `get_flow_active_version` | 当前激活的 FlowVersion 摘要（无 VersionData）。三选一。 | 同上 |
+| `get_flow_version_data` | 按 FlowVersion Id 取完整记录，含 `VersionData`（XML，可能很大并可能截断），只读。 | `flowVersionId: str` |
+| `search_flows_by_apex_class_reference` | 在 VersionData 中搜 Apex 类名；优先 SOQL LIKE，失败则扫描最近 Flow 的 Latest 版本，只读。 | `apexClassName: str`, `limit: int = 20`, `maxScanDefinitions: int = 40` |
+| `get_flow_version_summary` | 从 VersionData（XML）提取可读摘要：processType、触发、Apex/子流程、元素计数等（启发式），只读。 | `flowVersionId: str` |
+| `diff_flow_versions` | 对比两个 FlowVersion：各自摘要 + 按行首个差异（大 XML 会截断），只读。 | `flowVersionIdA: str`, `flowVersionIdB: str`, `contextLines: int = 4` |
+| `list_flows_by_filter` | 按 Tooling `Flow` 筛选（ProcessType / TriggerType / TriggerObject / Status / MasterLabel 模糊），**至少一项**；只读。 | 各条件均为 `Optional[str]`，`limit: int = 100` |
+| `get_subflow_dependencies` | 从 VersionData 解析子流程引用（`flowName` 等），只读。 | `flowVersionId: str` |
+| `get_flow_faults_or_errors` | 尽力查 FlowInterview + EventLogFile（EventType 含 Flow）；视 Org/许可证可能无数据，只读。 | `interviewLimit: int = 25`, `eventLogLimit: int = 15` |
+| `list_orchestration_flows` | `ProcessType = 'Orchestration'` 的 Flow 列表，只读。 | `limit: int = 100` |
+| `list_workflow_process_flows` | `ProcessType = 'Workflow'` 的 Flow 列表（部分 Org）；可与 `get_workflows_for_object` 对照，只读。 | `limit: int = 100` |
+| `describe_flow_tooling_sobject` | Describe Tooling 对象（如 `Flow`、`FlowVersion`、`FlowDefinition`），只读。 | `apiName: str` |
+| `parse_flow_structure` | **完整解析** VersionData（MDAPI XML）为 JSON：`headerMap`、`start`、variables/constants/formulas、`elementIndex`（每元素含 `detail` 与 `connectorTargetList`）、`connectorEdgeList`；可选 `includeFullTree`（截断）。供 AI 排查连接器/元素错误。 | `flowVersionId: str`, `includeFullTree: bool = false`, `fullTreeMaxChars: int = 150000`, `maxElemDetailChars: int = 40000`, `maxIndexedElements: int = 450` |
+
+---
+
+## 5. 用户与权限（tools_user_security）
 
 | 工具名 | 说明 | 参数 |
 |--------|------|------|
@@ -78,7 +100,8 @@
 | tools_query | 6 |
 | tools_metadata | 12 |
 | tools_apex | 9 |
+| tools_flow | 15 |
 | tools_user_security | 12 |
-| **合计** | **39** |
+| **合计** | **54** |
 
 以上工具均为只读，不执行任何 DML 或元数据写入。

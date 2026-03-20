@@ -26,6 +26,7 @@ import { registerToolsMetadata } from "./tools/metadata.js";
 import { registerToolsApex } from "./tools/apex.js";
 import { registerToolsUserSecurity } from "./tools/userSecurity.js";
 import { registerToolsCustom } from "./tools/customTools.js";
+import { registerToolsFlow } from "./tools/flow.js";
 
 // 创建 MCP 服务实例
 const mcpServer = new McpServer(
@@ -38,6 +39,7 @@ registerToolsQuery(mcpServer);
 registerToolsMetadata(mcpServer);
 registerToolsApex(mcpServer);
 registerToolsUserSecurity(mcpServer);
+registerToolsFlow(mcpServer);
 registerToolsCustom(mcpServer);
 
 // 使用 stdio 传输并连接

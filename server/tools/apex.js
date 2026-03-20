@@ -35,10 +35,23 @@ export async function getTriggersForObject(objName) {
   }));
 }
 
-// 按对象查 Flow（Record-Triggered）
-export async function getFlowsForObject(objName) {
+// 按对象查 Flow（Record-Triggered）；opts.onlyActive 仅 Active；opts.limit 限制条数
+export async function getFlowsForObject(objName, opts = {}) {
+  const onlyActive = Boolean(opts.onlyActive);
+  const limRaw = opts.limit;
+  const limVal =
+    limRaw !== undefined && limRaw !== null
+      ? limitValue(Number(limRaw), DEFAULT_LIMIT_MAX)
+      : null;
   const safeObj = escapeSoqlLiteral(objName);
-  const soql = `SELECT Id, MasterLabel, ProcessType, TriggerType, TriggerObject, Status, VersionNumber, LastModifiedDate FROM Flow WHERE TriggerObject = '${safeObj}' AND ProcessType = 'Flow' ORDER BY LastModifiedDate DESC`;
+  let soql = `SELECT Id, MasterLabel, ProcessType, TriggerType, TriggerObject, Status, VersionNumber, LastModifiedDate FROM Flow WHERE TriggerObject = '${safeObj}' AND ProcessType = 'Flow'`;
+  if (onlyActive) {
+    soql += ` AND Status = 'Active'`;
+  }
+  soql += ` ORDER BY LastModifiedDate DESC`;
+  if (limVal != null) {
+    soql += ` LIMIT ${limVal}`;
+  }
   const resultData = await sfToolingQuery(soql);
   return (resultData.records || []).map((rec) => ({
     Id: rec.Id || "",
@@ -140,10 +153,21 @@ export function registerToolsApex(mcpServer) {
   // 暴露 getFlowsForObject
   mcpServer.tool(
     "get_flows_for_object",
-    "查询与指定对象相关的 Record-Triggered Flow（只读）。",
-    { objName: z.string() },
-    async ({ objName }) => {
-      const list = await getFlowsForObject(objName);
+    "查询与指定对象相关的 Record-Triggered Flow（只读）。可选仅激活、限制条数。",
+    {
+      objName: z.string().describe("对象 API 名"),
+      onlyActive: z
+        .boolean()
+        .optional()
+        .default(false)
+        .describe("为 true 时仅返回 Status=Active"),
+      limit: z
+        .number()
+        .optional()
+        .describe("最大返回条数（默认不限制，最大 200）")
+    },
+    async ({ objName, onlyActive, limit }) => {
+      const list = await getFlowsForObject(objName, { onlyActive, limit });
       return textContent(list);
     }
   );
