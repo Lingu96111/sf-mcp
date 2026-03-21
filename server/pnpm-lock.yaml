@@ -17,6 +17,9 @@ importers:
       jsforce:
         specifier: ^3.10.14
         version: 3.10.14
+      zod:
+        specifier: ^4.3.0
+        version: 4.3.6
 
 packages:
 

@@ -18,7 +18,8 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
     "fast-xml-parser": "^5.5.7",
-    "jsforce": "^3.10.14"
+    "jsforce": "^3.10.14",
+    "zod": "^4.3.0"
   },
   "files": [
     "index.js",
