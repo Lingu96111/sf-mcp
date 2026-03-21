@@ -19,12 +19,10 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '23'
+          node-version: '23.3.0'
           cache: 'pnpm'
 
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run vscode:prepublish
-      - run: pnpm exec vsce package --no-dependencies
+      - run: pnpm run package
 
       - name: Publish to Open VSX
         env:
