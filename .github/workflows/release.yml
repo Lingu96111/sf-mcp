@@ -22,6 +22,8 @@ jobs:
           node-version: '23.3.0'
           cache: 'pnpm'
 
+      - run: pnpm install --frozen-lockfile
+
       - run: pnpm run package
 
       - name: Publish to Open VSX
