@@ -27,9 +27,15 @@ jobs:
       - name: Sync version from tag
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
+          CURRENT_VERSION="$(node -p "require('./package.json').version")"
           echo "Release tag: ${GITHUB_REF_NAME}"
-          echo "Package version: ${VERSION}"
-          pnpm version "${VERSION}" --no-git-tag-version
+          echo "Current version: ${CURRENT_VERSION}"
+          echo "Target version: ${VERSION}"
+          if [ "${CURRENT_VERSION}" = "${VERSION}" ]; then
+            echo "Version unchanged, skip update."
+          else
+            pnpm version "${VERSION}" --no-git-tag-version
+          fi
 
       - run: pnpm run package
 
