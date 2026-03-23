@@ -1,202 +1,156 @@
-# SF MCP — 让 AI 直接操作你的 Salesforce Org
+<h1 style="text-align: center">Salesforce MCP</h1>
 
-> 安装即用，无需写代码。让 Cursor AI 帮你查数据、看日志、读取元数据，甚至修改 Org 记录。
+<p align="center">
+  <img src="https://img.shields.io/badge/Salesforce-MCP-00A1E0?style=flat&logo=Salesforce" alt="Salesforce MCP" />
+  <img src="https://img.shields.io/badge/Cursor-MCPTools-9D34DA?style=flat&logo=Cursor" alt="Cursor MCP Tools" />
+</p>
+<p align="center">
+  <img src="https://img.shields.io/github/actions/workflow/status/Lingu96111/sf-mcp/release.yml?label=BUILD&style=flat&color=2ECC71" alt="Build Status" />
+  <img src="https://img.shields.io/github/v/release/Lingu96111/sf-mcp?label=RELEASE&style=flat&color=1F4690" alt="Release Version" />
+  <a href="https://github.com/Lingu96111/sf-mcp"><img src="https://img.shields.io/badge/Github-repo-333333?style=flat&logo=Github" alt="GitHub Repository" /></a>
+  <img src="https://img.shields.io/badge/LICENSE-MIT-F39C12?style=flat" alt="License MIT" />
+</p>
 
----
+## 一、简介
 
-## 这是什么？
+SF MCP（Salesforce MCP）是一款为 Cursor 编辑器打造的扩展插件，核心目标是让 AI 能够直接操作 Salesforce Org，无需开发者编写代码即可借助 Cursor AI 完成 Salesforce 相关的数据查询、元数据读取、日志查看等操作，大幅降低 Salesforce 日常运维与开发的操作成本。
 
-**MCP-Salesforce** 是一个 Cursor 插件，安装后 AI 助手可以直接：
+## 二、适用场景
 
-- 查询 Salesforce 数据（SOQL/SOSL）
-- 查看 Apex 代码、日志、Trigger、Flow
-- 读取字段信息、对象配置、验证规则
-- 查询权限、Profile、用户信息
-- 执行你自定义的查询/修改操作（默认工具只支持查询操作）
+适合 Salesforce 开发者、管理员日常工作：使用 AI 快速查询数据/元数据、排查 Apex 日志、核对权限配置等，无需手动登录 Salesforce 后台或编写 CLI 命令，通过自然语言与AI交互即可完成操作，提升工作效率。
 
----
+## 三、可以让 AI 帮你做哪些事？
 
-## 第一步：安装插件
+扩展内置的能力**以只读为主**（查询数据与配置，不会在后台悄悄改 Org 里的数据或元数据）。若你自行添加了自定义配置里的接口，才可能包含写入类操作——使用前请自行确认权限与风险。
 
-### 方式一：扩展市场（推荐）
+常见用途包括：
 
-1. 在 Cursor 中按 `Ctrl+Shift+X`（Mac：`Cmd+Shift+X`）打开扩展视图
-2. 搜索 **SF MCP** 或 **Salesforce MCP**
-3. 点击安装
+- **数据与搜索**：按条件查记录、做搜索
+- **对象与页面**：字段列表、布局、选项值、验证规则、子对象关系、配置总览等
+- **开发与排障**：Apex 调试日志、类与 Trigger 源码、与对象相关的 Flow / Workflow 等
+- **Flow**：按名称查找、看版本、对比差异、解析结构（适合排查流程问题）
+- **用户与权限**：用户、Profile、权限集、对象/字段权限、登录历史等
 
-### 方式二：手动安装 VSIX
+想逐项核对具体能做什么，可打开 **[在线工具说明](https://github.com/lingu96111/sf-mcp/blob/main/server/TOOLS.md)**（列表略长，适合需要对照说明时使用）。
 
-1. 从 [Releases 页面](https://github.com/lingu96111/sf-mcp/releases) 下载 `.vsix` 文件
-2. 在扩展视图右上角点击「…」→「从 VSIX 安装…」，选择刚下载的文件
+## 四、使用步骤
 
----
+### 1. 安装扩展
 
-## 第二步：连接你的 Salesforce Org
+**从扩展市场（推荐）**
+在 Cursor 中按 `Ctrl+Shift+X`（Mac：`Cmd+Shift+X`），搜索 **Salesforce MCP**，安装 **Salesforce MCP for Cursor**。
 
-插件支持两种连接方式，选一种即可。
+**离线安装**
+到 [Releases](https://github.com/lingu96111/sf-mcp/releases) 或者 下载 `.vsix`，在扩展视图右上角「⋯」里选择 **从 VSIX 安装**。
 
-### 方式 A：Salesforce CLI（推荐，最简单）
+### 2. 连上你的 Salesforce
 
-**前提**：你已经安装了 [Salesforce CLI](https://developer.salesforce.com/tools/sfcli) 并且登录过 Org。
+推荐先用 **Salesforce 官方 CLI** 登录 Org；没有 CLI 时也可以用访问令牌连接（见下文）。
 
-1. 确认你已连接 Org（在终端运行 `sf org display` 能看到 Org 信息即可）
-2. 打开你的 Salesforce 项目文件夹，插件会自动读取 `.sf/config.json` 中的目标 Org
-3. **无需任何额外配置**，直接进入第三步
+**方式 A：已安装 Salesforce CLI（推荐）**
 
-> 如果你有多个 Org，可以在插件设置中填写 `salesforceMcp.sfOrgAlias`（Org 别名）来指定使用哪一个。
+(1). 若尚未安装，请先安装[Salesforce CLI](https://developer.salesforce.com/tools/sfcli) 并登录 Org
+(2). 在终端执行 **`sf org display`**，能正常显示当前 Org 即可
+(3). 用 Cursor**打开你的 Salesforce 项目文件夹**（里面有`.sf` 配置的那种），扩展会自动使用其中的默认 Org
+(4). 若本机有多个 Org，可在扩展设置里填写 **`salesforceMcp.sfOrgAlias`**，指定Org本地别名
 
-### 方式 B：Access Token（不使用 CLI 时）
+**方式 B：不用 CLI，用访问令牌**
 
-如果你没有安装 Salesforce CLI，可以用 Access Token 直接连接：
-
-1. 按 `Ctrl+Shift+X` 打开扩展视图 → 找到 MCP-Salesforce → 点击齿轮图标 → 「扩展设置」
-2. 填写以下两项：
+(1). 打开扩展设置（扩展旁齿轮 → **扩展设置**）
+(2). 按下表填写（名称在设置里可搜索到）：
 
 
-| 设置项                           | 填写什么                                          |
-| ----------------------------- | --------------------------------------------- |
-| `salesforceMcp.sfAuthMode`    | 改为 `token`                                    |
-| `salesforceMcp.sfInstanceUrl` | 你的 Org URL，例如 `https://xxx.my.salesforce.com` |
-| `salesforceMcp.sfAccessToken` | 你的 Access Token（从 Salesforce Setup 中获取）       |
+| 设置项                        | 怎么填                                            |
+| ------------------------------- | --------------------------------------------------- |
+| `salesforceMcp.sfAuthMode`    | 填`token`                                         |
+| `salesforceMcp.sfInstanceUrl` | 你的登录地址，例如`https://xxx.my.salesforce.com` |
+| `salesforceMcp.sfAccessToken` | 在 Salesforce**设置** 里取得的访问令牌            |
 
+### 3. 启动连接服务
 
----
+按 `Ctrl+Shift+P`（Mac：`Cmd+Shift+P`），运行 **`Salesforce MCP: 启动服务`**。
+状态栏出现 **`✔ SFMCP 就绪`** 即表示已连好。
 
-## 第三步：启动 MCP 服务
+### 4. 在 Cursor 里打开开关
 
-1. 按 `Ctrl+Shift+P`（Mac：`Cmd+Shift+P`）打开命令面板
-2. 输入并执行：**Salesforce MCP: 启动服务**
-3. 看到状态栏右下角出现 `✔ SFMCP 就绪` 即表示成功
+按 `Ctrl+Shift+J`（Mac：`Cmd+Shift+J`）打开 Cursor 设置 → **Tools & MCP** → 找到 **salesforce-mcp**，打开开关。
 
----
+## 五、可以怎么问？
 
-## 第四步：在 Cursor 中启用
+装好后直接自然语言提问AI即可，例如：
 
-1. 按 `Ctrl+Shift+J`（Mac：`Cmd+Shift+J`）打开 Cursor 设置
-2. 进入 **Tools & MCP** 标签页
-3. 找到 **salesforce-mcp**，点击启用（开关打开）
-
----
-
-## 现在可以做什么？
-
-打开 Cursor AI 对话框，直接用自然语言提问，例如：
-
-```
-帮我查询最近 10 条 Apex 日志
+```text
+列出 Account 上所有字段名称和类型，标出哪些是必填。
 ```
 
-```
-列出 Account 对象所有的字段名和类型
-```
-
-```
-找出 OrderTrigger 的源代码
+```text
+拉最近 10 条 Apex 调试日志，看有没有报错，并总结原因。
 ```
 
+```text
+OrderTrigger 里 before update 做了哪些事？用要点说明。
 ```
-查询 UserA@xxx.com 拥有哪些权限集
+
+```text
+查一下 user@example.com 用的 Profile 和权限集有哪些。
 ```
 
-AI 会自动选择合适的工具并返回结果，你不需要手动输入任何 SOQL 或 API。
+## 六、进阶：自定义「常用能力」（可选）
 
----
+适合 **想给团队固定几条查询或接口、又不想改扩展本身** 的场景。在 **Salesforce 项目根目录** 新建：
 
-## 自定义工具
-
-如果内置工具不够用，你可以**不写代码，只写配置文件**来添加自己的工具。
-
-### 怎么做？
-
-在你的 **Salesforce 项目根目录**新建一个文件：
-
-```
+```text
 .salesforce-mcp/custom-tools.json
 ```
 
-然后写入你想要的工具，格式如下：
+下面是一个只读查询的示例片段：
 
 ```jsonc
 [
   {
-    // 查询工具示例：按行业查 Account
     "name": "custom_accounts_by_industry",
-    "description": "按行业查询 Account 列表",
+    "description": "按行业查询客户列表",
     "type": "soql",
     "template": "SELECT Id, Name FROM Account WHERE Industry = '{{industry}}' LIMIT {{limit}}",
     "parameters": [
-      { "name": "industry", "type": "string", "required": true, "description": "行业名称，例如 Technology" },
+      { "name": "industry", "type": "string", "required": true, "description": "行业，例如 Technology" },
       { "name": "limit", "type": "number", "required": false, "default": 50 }
-    ]
-  },
-  {
-    // 修改工具示例：更新 Account 的名称
-    "name": "custom_update_account_name",
-    "description": "根据 Id 修改 Account 的 Name",
-    "type": "rest",
-    "method": "PATCH",
-    "template": "/sobjects/Account/{{recordId}}",
-    "body": "{\"Name\": \"{{name}}\"}",
-    "parameters": [
-      { "name": "recordId", "type": "string", "required": true, "description": "Account 记录 Id" },
-      { "name": "name", "type": "string", "required": true, "description": "新的名称" }
     ]
   }
 ]
 ```
 
-保存后，**重新执行「Salesforce MCP: 启动服务」**，AI 就能调用你定义的工具了。
 
-### 工具类型说明
+| 类型            | 含义                                                                     |
+| ----------------- | -------------------------------------------------------------------------- |
+| `soql`          | 只读数据查询                                                             |
+| `tooling_query` | 只读元数据类查询                                                         |
+| `rest`          | 调用 REST 接口（可按配置使用 GET/POST 等，**可能包含写入**，请谨慎配置） |
 
+保存后执行一次 **`Salesforce MCP: 启动服务`** 才会生效。更多写法可参考 [GitHub 仓库](https://github.com/Lingu96111/sf-mcp/blob/main/.salesforce-mcp/custom-tools.json.example) 里的 `.salesforce-mcp/custom-tools.json.example`。
 
-| type            | 用途                                                     |
-| --------------- | ------------------------------------------------------ |
-| `soql`          | 执行 SOQL 查询（只读）                                         |
-| `tooling_query` | 查询 Apex 类、Trigger 等元数据（只读）                             |
-| `rest`          | 调用 REST API，`method` 可设为 `GET/POST/PATCH/DELETE`（可读可写） |
+## 七、常见问题
 
+**Q: 状态栏一直显示未配置**
+确认已在该项目目录用 CLI 登录过（`sf org display` 正常），或在设置里填对了 **`salesforceMcp.sfOrgAlias`**。
 
-### 占位符规则
+**Q: AI 说连不上或没有相关能力**
+确认 **Tools & MCP** 里已打开 **salesforce-mcp**，并已执行过 **Salesforce MCP: 启动服务**。
 
-模板中用 `{{参数名}}` 表示占位符，参数名必须在 `parameters` 数组中声明。
+**Q: 改了自定义配置没反应**
+需要重新执行 **Salesforce MCP: 启动服务** 才会重新加载。
 
-### 更多示例
+**一次查出来只有很少几条、好像不全**
+为避免对话过长，结果数量可能被限制（例如大约 200 条）。请让 AI 加筛选条件或分页思路（如按日期、Id 范围缩小范围）。
 
-参考插件内的示例文件 `.salesforce-mcp/custom-tools.json.example`，里面包含 4 种典型用法（SOQL 查询、Tooling 查询、REST GET、REST POST）。
+## 八、运行环境说明
 
----
+- 使用 **Cursor** 编辑器
+- 建议安装 **Node.js 22 及以上**
+- 若用 CLI 方式连接，需安装 [Salesforce CLI](https://developer.salesforce.com/tools/sfcli) 并完成登录
 
-## 常见问题
+## 九、反馈与许可
 
-**Q：状态栏显示「SFMCP 未配置」怎么办？**
-
-A：检查你的 Salesforce 项目文件夹是否已通过 CLI 连接了 Org（运行 `sf org display`），或者在插件设置中手动填写 Org 别名。
-
-**Q：AI 说找不到工具，怎么办？**
-
-A：确认已在 Cursor「Tools & MCP」里开启了 **salesforce-mcp**，并且重新执行过「Salesforce MCP: 启动服务」。
-
-**Q：自定义工具改完后没有生效？**
-
-A：自定义工具在服务启动时加载，改完 `custom-tools.json` 后需要重新执行「Salesforce MCP: 启动服务」。
-
-**Q：查询结果只返回了 200 条？**
-
-A：超过 200 条时系统会自动截断，防止 AI 上下文溢出。建议在 SOQL 模板中加 `LIMIT` 参数控制返回数量。
-
----
-
-## 系统要求
-
-- Cursor 或 VS Code 1.85.0 及以上
-- Node.js 18 及以上
-- CLI 模式需安装 [Salesforce CLI](https://developer.salesforce.com/tools/sfcli) 并登录
-
----
-
-## 许可证
-
-MIT — 免费使用，欢迎贡献。
-
-[GitHub 仓库](https://github.com/lingu96111/sf-mcp) · [开发者文档](README_DEV.md)
+- 版本更新：[GitHub Releases](https://github.com/Lingu96111/sf-mcp/releases)
+- 问题反馈：[Github Issues](https://github.com/lingu96111/sf-mcp/issues)
+- 许可：[MIT](https://github.com/Lingu96111/sf-mcp?tab=MIT-1-ov-file)
