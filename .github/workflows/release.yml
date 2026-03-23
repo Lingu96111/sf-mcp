@@ -24,6 +24,13 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Sync version from tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "Release tag: ${GITHUB_REF_NAME}"
+          echo "Package version: ${VERSION}"
+          pnpm version "${VERSION}" --no-git-tag-version
+
       - run: pnpm run package
 
       - name: Publish to Open VSX
